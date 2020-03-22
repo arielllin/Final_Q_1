@@ -1,0 +1,18 @@
+.wrapper {
+  width: 1480px;
+  margin: 0 auto;
+}
+
+.container-fluid {
+  padding-top: 15px;
+}
+
+.btn {
+  padding: .2rem .375rem;
+  font-size: 0.7rem;
+}
+
+.no-movie {
+  margin: 10rem auto;
+  font-size: 3rem;
+}
