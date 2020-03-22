@@ -6,7 +6,6 @@ let gerneSelectedMovie = []
 
 const movieList = document.querySelector('.list-group')
 const movieCards = document.querySelector('.data-panel')
-const movieTags = document.querySelector('.card-body')
 
 const movieListData = {
   "1": "Action",
@@ -33,6 +32,12 @@ const movieTitleData = Object.values(movieListData)
 
 
 showMovieList(movieTitleData)
+
+movieCards.addEventListener('click', event => {
+  if (event.target.matches('.model-show')) {
+    showModel(event.target.dataset.id)
+  }
+})
 
 movieList.addEventListener('click', event => {
   let results = []
@@ -64,7 +69,7 @@ axios.get(INDEX_URL)
   showMovieCards(movieData)
 })
 .catch(err => {
-  console.log(err)
+  console.log('err')
 })
 
 function ListToClick(listId){
@@ -93,9 +98,12 @@ function showMovieCards(data){
 
   data.forEach(movie => {
     htmlContain += `
-      <div class="col-auto mb-2" data-id="${movie.id}">
+      <div class="col-auto mb-2 movie-card">
         <div class="card" style="width: 16rem;">
-          <img src="${IMG_URL}${movie.image}" class="card-img-top" alt="...">
+          <img src="${IMG_URL}${movie.image}" class="card-img-top img" alt="...">
+            <div class="middle">
+              <button type="button" class="btn btn-lg btn-primary model-show" data-toggle="modal" data-target="#exampleModal" data-id="${movie.id}">More</button>
+            </div>
           <div class="card-body">
              <h5 class="card-title">${movie.title}</h5>
     `
@@ -103,7 +111,7 @@ function showMovieCards(data){
       Object.keys(movieListData).forEach(key => {
         if (genre === Number(key)) {
           htmlContain += `
-            <a href="#" class="btn btn-outline-secondary mr-1 mb-1">${movieListData[genre]}</a>
+            <a href="#" class="btn btn-outline-secondary mr-1 mb-1 tag">${movieListData[genre]}</a>
           `
         }
       })
@@ -115,6 +123,28 @@ function showMovieCards(data){
     `
     movieCards.innerHTML = htmlContain
   })
+}
+
+function showModel(id){
+  const modalTitle = document.getElementById('show-movie-title')
+  const modalPic = document.getElementById('show-movie-image')
+  const modalDate = document.getElementById('show-movie-date')
+  const modalDescription = document.getElementById('show-movie-description')
+  const url = INDEX_URL + id
+
+  console.log(url)
+  axios.get(url)
+    .then(response => {
+      const data = response.data.results
+      
+      modalTitle.textContent = data.title
+      modalPic.innerHTML = `<img src="${IMG_URL}${data.image}" class="img-fluid" alt="Responsive image">`
+      modalDate.textContent = `release at : ${data.release_date}`
+      modalDescription.textContent = `${data.description}`
+    })
+    .catch(err => {
+      console.log('err')
+    })
 }
 
 
